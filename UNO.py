@@ -3,11 +3,11 @@ import random as r
 
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = [] #{}
-bottom_card = ''
+bottom_card = any
 
 
 #create cards and append to the deck array
-def create_deck_cards(start, end = 10):
+def create_deck_cards(start, end = 10) -> None:
 
   for color in colors:
     #
@@ -20,10 +20,10 @@ def create_deck_cards(start, end = 10):
 
 
 #create special cards and append to the deck array
-def create_special_deck_cards(rang, symbol):
+def create_special_deck_cards(rang, symbol) -> None:
 
   for color in colors:
-    #
+    #note wilds don't have a specific
     if 'wild' in symbol:
       color = "any"
     #
@@ -48,7 +48,45 @@ def choose_random_bottom_card() -> dict:
     #bottom_card = card #fix ??
     return card
 
-#shuffle deck and set bottom card
+
+#
+def check_bottom_card_is_special() -> tuple[bool, str]:
+
+  symbol = bottom_card["symbol"]
+  if str(symbol).isnumeric():
+    return False
+  else: return True, symbol
+
+
+#
+def reverse_card_played() -> None:
+
+  pass
+
+
+#
+def skip_card_played() -> None:
+  #increment/decrement by 2 once
+  #the index of current player
+  pass
+
+
+#
+def wild_color_card_played() -> None:
+  #set the bottom card symbol and color = color
+  #return color
+  pass
+
+
+#
+def call_next_player() -> None:
+  pass 
+
+
+
+###########################################################
+
+#create and shuffle deck
 def start_game():
 
   create_deck_cards(0)  #0-9 cards
@@ -60,57 +98,105 @@ def start_game():
   create_special_deck_cards(1, "wild draw 4") #wild draw cards
   #r.shuffle(deck)
 
-def check_bottom_card_is_special() -> bool:
-  if str(bottom_card["symbol"]).isnumeric():
-    return False
-  else: return True, bottom_card["symbol"]
 
+###########################################################
 
-##################################
 class Player():
 
   cards: list[dict] = []
 
-  def __init__(self, name) -> None:
+  def __init__(self, name = "Player") -> None:
 
     self.name = name
+    self.cards = r.choices(deck, k=7)
 
+  # 
+  def display_player_cards(self): 
+    for card in self.cards: print(card)
 
+  #
   def draw_cards(self, number_of_draws) -> None:
 
-    #select random cards from deck
-    self.cards = r.choices(deck, k=number_of_draws)
+    #select random cards from deck and add to player's cards
+    cards = r.choices(deck, k=number_of_draws)
+    for card in cards: self.cards.append(card)
+
 
     #remove the selected cards from deck
+    for card in self.cards: deck.remove(card)
+
+
+  #check if player has special card
+  def player_has_special_card(self) -> bool:
+
     for card in self.cards:
-      deck.remove(card)
+      symbol = card["symbol"]
+      if type(symbol) == str: return True
+    return False
 
-  def check_if_can_play(bottom_card) -> bool:
+  #
+  def play_a_card(self):
 
+    counter = 1
+
+    for cards in self.cards:
+      print(counter, cards)
+      counter += 1
+
+    user = int(input("Choose a move to play: ")) 
+
+    player_card = self.cards[user - 1]
+
+    print("You chose: ", player_card)
+
+    if bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
+      self.cards.remove(player_card)
+      print("Correct!")
+      self.display_player_cards()
+    else:
+      print("Take 2 for your silly mistake! ")
+      self.draw_cards(2)
+      self.display_player_cards()
+
+  def play_a_special_card():
     pass
 
-  def play_a_card():
-    pass
 
+
+
+######################computer#####################
+
+# class Computer(Player):
+
+#   #if bottom card is a special card, and user has no special card
+#   def check_for_next_move():
+#     pass
+
+
+####################################end of class#######################
 
 ####################################
+
 start_game()
-bottom_card = {'symbol': "wild", 'color': 'green'}#choose_random_bottom_card() # fix,  not accessible in fn??
+
+bottom_card = choose_random_bottom_card() # fix,  not accessible in fn??
+#bottom_card = {'symbol': "wild", 'color': 'green'}  #choose_random_bottom_card() # fix,  not accessible in fn??
+
 ###################################
 
 
-##net for control..
+### net for control.. ###
 
 player = Player("frank")
-player.draw_cards(5)
 print("player cards: ", player.name)
-for card in player.cards: print(card)
+#for card in player.cards: print(card)
+#print("player has special: ", player.player_has_special_card())
 
 
 print("bottom card: ", bottom_card)
 # print("number of cards: ", len(deck))
 # print("deck cards: ")
 # for cards in deck: print(cards)
+#print("bottom special card: ", check_bottom_card_is_special())
 
-print(check_bottom_card_is_special())
-print(type(check_bottom_card_is_special()))
+player.play_a_card()
