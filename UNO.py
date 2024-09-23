@@ -94,7 +94,7 @@ def start_game():
   create_special_deck_cards(2, "skip")  #skip cards
   create_special_deck_cards(2, "reverse") #reverse cards
   create_special_deck_cards(2, "draw 2")  #draw cards
-  create_special_deck_cards(1, "wild")  #wild cards
+  create_special_deck_cards(1, "wild color")  #wild cards
   create_special_deck_cards(1, "wild draw 4") #wild draw cards
   #r.shuffle(deck)
 
