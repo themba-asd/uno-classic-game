@@ -143,7 +143,7 @@ class Player():
       print(counter, cards)
       counter += 1
       
-    print(counter + 1, "Draw Card")
+    print(counter , "Draw Card")
 
     user_choice = int(input("Choose a move to play: ")) 
 
@@ -191,10 +191,17 @@ bottom_card = choose_random_bottom_card() # fix,  not accessible in fn??
 ###################################
 
 
-### net for control.. ###
+### net for contprint("bottom card: ", bottom_card)
+# print("number of cards: ", len(deck))
+# print("deck cards: ")
+# for cards in deck: print(cards)
+#print("bottom special card: ", check_bottom_card_is_special())
+
 
 player = Player("frank")
+player2 = Player("tshego")
 print("player cards: ", player.name)
+print("player cards: ", player2.name)
 #for card in player.cards: print(card)
 #print("player has special: ", player.player_has_special_card())
 
@@ -206,3 +213,6 @@ print("bottom card: ", bottom_card)
 #print("bottom special card: ", check_bottom_card_is_special())
 
 player.play_a_card()
+print("Tshego's turn")
+player2.play_a_card()
+
