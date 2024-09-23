@@ -142,21 +142,27 @@ class Player():
     for cards in self.cards:
       print(counter, cards)
       counter += 1
+      
+    print(counter + 1, "Draw Card")
 
-    user = int(input("Choose a move to play: ")) 
+    user_choice = int(input("Choose a move to play: ")) 
 
-    player_card = self.cards[user - 1]
-
-    print("You chose: ", player_card)
-
-    if bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
-      self.cards.remove(player_card)
-      print("Correct!")
-      self.display_player_cards()
+    if user_choice == counter + 1:
+      self.draw_cards(1)
+      print("You chose to draw a card.")
     else:
-      print("Take 2 for your silly mistake! ")
-      self.draw_cards(2)
-      self.display_player_cards()
+      player_card = self.cards[user_choice - 1]
+
+      print("You chose: ", player_card)
+
+      if bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
+        self.cards.remove(player_card)
+        print("Correct!")
+      else:
+        print("Take 2 for your silly mistake! ")
+        self.draw_cards(2)
+      
+    self.display_player_cards()
 
   def play_a_special_card():
     pass
