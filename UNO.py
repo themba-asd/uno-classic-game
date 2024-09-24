@@ -136,7 +136,7 @@ class Player():
 
 
   #show the cards and draw option in ordered list
-  def display_player_options(self):
+  def handle_player_options(self):
 
     counter = 1
 
@@ -146,21 +146,22 @@ class Player():
       
     print(counter , "Draw Card")
 
-    return counter
+    user_choice = int(input("Choose a move to play: "))
+
+    #valides the player's choice
+    while user_choice > counter + 1:
+      user_choice = int(input("You chose an invalid option, try again!"))
+
+    return counter, user_choice
 
 
   #
   def play_a_card(self):
 
-    counter = self.display_player_options()
-
-    user_choice = int(input("Choose a move to play: "))
-
-    while user_choice > counter + 1:
-      user_choice = int(input("You chooose the wrong option, try again "))
+    counter, user_choice = self.handle_player_options()
 
     #last list option will always be to draw cards
-    if user_choice == counter + 1:
+    if user_choice == counter:
       self.draw_cards(1)
       print("You chose to draw a card.")
     else:
@@ -168,10 +169,10 @@ class Player():
 
       print("You chose: ", player_card)
 
-      #if card played is special, leave this fn & call theplay_a_special_card() 
+      #if card played is special, leave this fn & call the played_a_special_card() 
       if type(player_card["symbol"]) == type(''):
         self.cards.remove(player_card)
-        self.play_a_special_card()
+        self.played_a_special_card()
 
       elif bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
         self.cards.remove(player_card)
@@ -183,8 +184,10 @@ class Player():
       
     self.display_player_cards()
 
-  def play_a_special_card(self):
+  def played_a_special_card(self):
     print("Special card played, handling..")
+    #I was think match case!!
+
     pass
 
 
