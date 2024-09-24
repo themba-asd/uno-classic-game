@@ -89,9 +89,7 @@ def call_next_player() -> None:
   pass 
 
 
-
 ###########################################################
-
 #create and shuffle deck
 def start_game():
 
@@ -106,7 +104,6 @@ def start_game():
 
 
 ###################Class PLAYER########################################
-
 class Player():
 
   cards: list[dict] = []
@@ -115,6 +112,7 @@ class Player():
 
     self.name = name
     self.cards = choices(deck, k=7)
+
 
   # 
   def display_player_cards(self): 
@@ -126,6 +124,7 @@ class Player():
     for cards in self.cards:
       counter += 1
       print(counter, cards)
+
 
   #
   def draw_cards(self, number_of_draws) -> None:
@@ -153,23 +152,17 @@ class Player():
 
     counter = len(self.cards) + 1
 
-    #print("bottom card: ", bottom_card)
-
-    # for cards in self.cards:
-    #   print(counter, cards)
-    #   counter += 1
-
     self.display_player_cards()
       
     print(counter , "Draw Card")
 
-    user_choice = int(input("Choose a move to play: "))
+    user_choice = input("Choose a move to play: ")
 
     #valides the player's choice
-    while user_choice > counter or user_choice == 0:
-      user_choice = int(input("Invalid option, choose again: "))
+    while not user_choice.isdigit() or int(user_choice) > counter or user_choice == '0':
+      user_choice = input("Invalid option, choose again: ")
 
-    return counter, user_choice
+    return counter, int(user_choice)
 
 
   #
@@ -253,7 +246,7 @@ bottom_card = choose_random_bottom_card() #fix, not accessible inside fn??
 #print("bottom special card: ", check_bottom_card_is_special())
 
 
-player = Player("frank")
+player = Player("Frank Franklin")
 #player2 = Player("tshego")
 print("Player Name: ", player.name)
 #print("player cards: ", player2.name)
