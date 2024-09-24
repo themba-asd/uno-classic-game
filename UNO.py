@@ -35,6 +35,10 @@ def create_special_deck_cards(rang, symbol) -> None:
       deck.append(card)
 
 
+#change bottom card
+def change_bottom_card(card):
+  bottom_card = card
+
 #choose  bottom card, remove from deck and return the card
 def choose_random_bottom_card() -> dict:
 
@@ -114,7 +118,14 @@ class Player():
 
   # 
   def display_player_cards(self): 
-    for card in self.cards: print(card)
+
+    print("bottom card: ", bottom_card)
+    
+    counter = 0
+
+    for cards in self.cards:
+      counter += 1
+      print(counter, cards)
 
   #
   def draw_cards(self, number_of_draws) -> None:
@@ -140,19 +151,23 @@ class Player():
   #show the cards and draw option in ordered list
   def handle_player_options(self):
 
-    counter = 1
+    counter = len(self.cards) + 1
 
-    for cards in self.cards:
-      print(counter, cards)
-      counter += 1
+    #print("bottom card: ", bottom_card)
+
+    # for cards in self.cards:
+    #   print(counter, cards)
+    #   counter += 1
+
+    self.display_player_cards()
       
     print(counter , "Draw Card")
 
     user_choice = int(input("Choose a move to play: "))
 
     #valides the player's choice
-    while user_choice > counter + 1:
-      user_choice = int(input("You chose an invalid option, try again!"))
+    while user_choice > counter or user_choice == 0:
+      user_choice = int(input("Invalid option, choose again: "))
 
     return counter, user_choice
 
@@ -186,9 +201,23 @@ class Player():
       
     self.display_player_cards()
 
-  def played_a_special_card(self):
+  def played_a_special_card(self, ):
     print("Special card played, handling..")
     #I was think match case!!
+    # num = 0
+    # match num:
+    #     # pattern 1
+    #     case 1:
+    #         print("One")
+    #     # pattern 2
+    #     case 2:
+    #         print("Two")
+    #     # pattern 3
+    #     case 3:
+    #         print("Three")
+    #     # default pattern
+    #     case _:
+    #         print("Number not between 1 and 3")
 
     pass
 
@@ -226,13 +255,13 @@ bottom_card = choose_random_bottom_card() #fix, not accessible inside fn??
 
 player = Player("frank")
 #player2 = Player("tshego")
-print("player cards: ", player.name)
+print("Player Name: ", player.name)
 #print("player cards: ", player2.name)
 #for card in player.cards: print(card)
 #print("player has special: ", player.player_has_special_card())
 
 
-print("bottom card: ", bottom_card)
+#print("bottom card: ", bottom_card)
 # print("number of cards: ", len(deck))
 # print("deck cards: ")
 # for cards in deck: print(cards)
