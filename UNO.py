@@ -3,7 +3,7 @@ from random import choice, choices, shuffle
 
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = [] #{}
-bottom_card = any
+bottom_card: dict = any
 
 
 #create cards and append to the deck array
@@ -35,12 +35,15 @@ def create_special_deck_cards(rang, symbol) -> None:
       deck.append(card)
 
 
+#fix this thing???
 #change bottom card
-def change_bottom_card(card):
+def change_bottom_card(card) -> None:
+  global bottom_card 
   bottom_card = card
+  
 
 #choose  bottom card, remove from deck and return the card
-def choose_random_bottom_card() -> dict:
+def set_random_bottom_card() -> dict:
 
   card: dict = choice(deck)
 
@@ -48,8 +51,8 @@ def choose_random_bottom_card() -> dict:
   while not str(card.get("symbol")).isnumeric():
     card = choice(deck)
   else:
+    change_bottom_card(card)
     deck.remove(card) # remove card from deck
-    #bottom_card = card #fix ??
     return card
 
 
@@ -78,7 +81,15 @@ def skip_card_played() -> None:
 
 
 #
-def wild_color_card_played() -> None:
+def draw_2_card_played() -> None:
+  #set the bottom card symbol and color = color
+  #return color
+
+  pass
+
+
+#
+def wild_draw_card_played() -> None:
   #set the bottom card symbol and color = color
   #return color
   pass
@@ -115,9 +126,9 @@ class Player():
 
 
   # 
-  def display_player_cards(self): 
+  def display_player_cards(self) -> None: 
 
-    print("bottom card: ", bottom_card)
+    print("\nBottom Card: ", bottom_card, "\n")
     
     counter = 0
 
@@ -148,7 +159,7 @@ class Player():
 
 
   #show the cards and draw option in ordered list
-  def handle_player_options(self):
+  def handle_player_options(self) -> tuple:
 
     counter = len(self.cards) + 1
 
@@ -156,7 +167,7 @@ class Player():
       
     print(counter , "Draw Card")
 
-    user_choice = input("Choose a move to play: ")
+    user_choice = input("\nChoose a move to play: ")
 
     #valides the player's choice
     while not user_choice.isdigit() or int(user_choice) > counter or user_choice == '0':
@@ -166,7 +177,7 @@ class Player():
 
 
   #
-  def play_a_card(self):
+  def play_a_card(self) -> None:
 
     counter, user_choice = self.handle_player_options()
 
@@ -177,42 +188,65 @@ class Player():
     else:
       player_card = self.cards[user_choice - 1]
 
-      print("You chose: ", player_card)
+      print("Card Played: ", player_card)
 
+      #validate card played
+      if bottom_card.get("symbol") == player_card.get("symbol") or bottom_card.get("color") == player_card.get("color") or bottom_card.get("color") == 'any' or player_card.get("color") == 'any':
       #if card played is special, leave this fn & call the played_a_special_card() 
-      if type(player_card.get("symbol")) == type(''):
-        self.cards.remove(player_card)
-        self.played_a_special_card()
-
-      elif bottom_card.get("symbol") == player_card.get("symbol") or bottom_card.get("color") == player_card.get("color") or bottom_card.get("color") == 'any':
-        self.cards.remove(player_card)
-        print("Correct!")
+        if type(player_card.get("symbol")) == type(''):
+          self.played_a_special_card(player_card)
+          self.cards.remove(player_card)
+        else:
+          change_bottom_card(player_card)
+          self.cards.remove(player_card)
+          print("Correct, Next Player Please")
 
       else:
-        print("Take 2 for your silly mistake! ")
+        print("\nTake +2 for your careless mistake! Nxa!")
         self.draw_cards(2)
       
     self.display_player_cards()
 
-  def played_a_special_card(self, ):
-    print("Special card played, handling..")
-    #I was think match case!!
-    # num = 0
-    # match num:
-    #     # pattern 1
-    #     case 1:
-    #         print("One")
-    #     # pattern 2
-    #     case 2:
-    #         print("Two")
-    #     # pattern 3
-    #     case 3:
-    #         print("Three")
-    #     # default pattern
-    #     case _:
-    #         print("Number not between 1 and 3")
+  def played_a_special_card(self, card) -> None:
 
-    pass
+    print("\nSpecial card played, handling..")
+
+  # "skip"  4x2 skip cards
+  # "reverse" 4x2 reverse cards
+  # "draw 2"   4x2 draw cards
+  # "wild color"  4x wild cards, any color
+  # "wild draw 4" 4x wild draw cards, any color
+
+    card_symbol = card.get("symbol")
+
+    match card_symbol:
+        
+        case 'wild color':
+            change_bottom_card(card)
+            #call next player
+            print("\nAny Color Can Be Played!")
+
+        case 'skip':
+            skip_card_played()
+            change_bottom_card(card)
+            print("\nSkipped Next Player, Askies")
+
+        case 'reverse':
+            reverse_card_played()
+            print("\nDirection Reversed, Hade Mfethu")
+
+        case "draw 2":
+            draw_2_card_played()
+            change_bottom_card(card)
+            print("\nTake +2 Baba")
+
+        # default pattern
+        case "wild draw 4":
+            wild_draw_card_played()
+            change_bottom_card(card)
+            print("\nTake +4 or Fight Back?, Any Color!")
+
+    #self.cards.remove(card)
 
 
 
@@ -230,9 +264,8 @@ class Player():
 ####################################
 
 start_game()
-# FIXXXXXX ????? **** %%%%% #### @@@@@@@
-bottom_card = choose_random_bottom_card() #fix, not accessible inside fn??
-#bottom_card = {'symbol': "wild", 'color': 'green'}  #choose_random_bottom_card() # fix,  not accessible in fn??
+bottom_card = set_random_bottom_card()
+#bottom_card = {'symbol': "wild", 'color': 'green'}
 
 ###################################
 
