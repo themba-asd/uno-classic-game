@@ -125,6 +125,9 @@ class Player():
     self.cards = choices(deck, k=7)
 
 
+  def check_if_winner(self):
+    if len(self.cards) < 1: exit()
+
   # 
   def display_player_cards(self) -> None: 
 
@@ -206,6 +209,7 @@ class Player():
         self.draw_cards(2)
       
     self.display_player_cards()
+    self.check_if_winner()
 
   def played_a_special_card(self, card) -> None:
 
@@ -245,9 +249,6 @@ class Player():
             wild_draw_card_played()
             change_bottom_card(card)
             print("\nTake +4 or Fight Back?, Any Color!")
-
-    #self.cards.remove(card)
-
 
 
 ######################computer#####################
@@ -293,7 +294,11 @@ print("Player Name: ", player.name)
 # for cards in deck: print(cards)
 #print("bottom special card: ", check_bottom_card_is_special())
 
-player.play_a_card()
+#player.play_a_card()
+
 #print("Tshego's turn")
 #player2.play_a_card()
 
+txt = {
+  'frank': player.play_a_card
+}
