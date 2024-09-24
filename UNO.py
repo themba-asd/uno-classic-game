@@ -99,7 +99,7 @@ def start_game():
   #r.shuffle(deck)
 
 
-###########################################################
+###################Class PLAYER########################################
 
 class Player():
 
@@ -134,8 +134,9 @@ class Player():
       if type(symbol) == str: return True
     return False
 
-  #
-  def play_a_card(self):
+
+  #show the cards and draw option in ordered list
+  def display_player_options(self):
 
     counter = 1
 
@@ -145,8 +146,20 @@ class Player():
       
     print(counter , "Draw Card")
 
-    user_choice = int(input("Choose a move to play: ")) 
+    return counter
 
+
+  #
+  def play_a_card(self):
+
+    counter = self.display_player_options()
+
+    user_choice = int(input("Choose a move to play: "))
+
+    while user_choice > counter + 1:
+      user_choice = int(input("You chooose the wrong option, try again "))
+
+    #last list option will always be to draw cards
     if user_choice == counter + 1:
       self.draw_cards(1)
       print("You chose to draw a card.")
@@ -155,18 +168,24 @@ class Player():
 
       print("You chose: ", player_card)
 
-      if bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
+      #if card played is special, leave this fn & call theplay_a_special_card() 
+      if type(player_card["symbol"]) == type(''):
+        self.cards.remove(player_card)
+        self.play_a_special_card()
+
+      elif bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
         self.cards.remove(player_card)
         print("Correct!")
+
       else:
         print("Take 2 for your silly mistake! ")
         self.draw_cards(2)
       
     self.display_player_cards()
 
-  def play_a_special_card():
+  def play_a_special_card(self):
+    print("Special card played, handling..")
     pass
-
 
 
 
@@ -191,7 +210,9 @@ bottom_card = choose_random_bottom_card() # fix,  not accessible in fn??
 ###################################
 
 
-### net for contprint("bottom card: ", bottom_card)
+### net for control ####
+
+# print("bottom card: ", bottom_card)
 # print("number of cards: ", len(deck))
 # print("deck cards: ")
 # for cards in deck: print(cards)
@@ -199,9 +220,9 @@ bottom_card = choose_random_bottom_card() # fix,  not accessible in fn??
 
 
 player = Player("frank")
-player2 = Player("tshego")
+#player2 = Player("tshego")
 print("player cards: ", player.name)
-print("player cards: ", player2.name)
+#print("player cards: ", player2.name)
 #for card in player.cards: print(card)
 #print("player has special: ", player.player_has_special_card())
 
@@ -213,6 +234,6 @@ print("bottom card: ", bottom_card)
 #print("bottom special card: ", check_bottom_card_is_special())
 
 player.play_a_card()
-print("Tshego's turn")
-player2.play_a_card()
+#print("Tshego's turn")
+#player2.play_a_card()
 
