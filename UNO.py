@@ -1,5 +1,5 @@
 #UNO Nton Nton
-import random as r
+from random import choice, choices, shuffle
 
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = [] #{}
@@ -38,21 +38,22 @@ def create_special_deck_cards(rang, symbol) -> None:
 #choose  bottom card, remove from deck and return the card
 def choose_random_bottom_card() -> dict:
 
-  card: dict = r.choice(deck)
+  card: dict = choice(deck)
 
   #check if its not a special card
-  while not str(card["symbol"]).isnumeric():
-    card = r.choice(deck)
+  while not str(card.get("symbol")).isnumeric():
+    card = choice(deck)
   else:
     deck.remove(card) # remove card from deck
     #bottom_card = card #fix ??
     return card
 
 
-#
+# this has not been used, do I even need it???,
+# maybe for/with played_a_special_card()
 def check_bottom_card_is_special() -> tuple[bool, str]:
 
-  symbol = bottom_card["symbol"]
+  symbol = bottom_card.get("symbol")
   if str(symbol).isnumeric():
     return False
   else: return True, symbol
@@ -66,7 +67,8 @@ def reverse_card_played() -> None:
 
 #
 def skip_card_played() -> None:
-  #increment/decrement by 2 once
+  #increment by 2 once
+  #if reverse has been played decrement by 2
   #the index of current player
   pass
 
@@ -96,7 +98,7 @@ def start_game():
   create_special_deck_cards(2, "draw 2")  #draw cards
   create_special_deck_cards(1, "wild color")  #wild cards
   create_special_deck_cards(1, "wild draw 4") #wild draw cards
-  #r.shuffle(deck)
+  shuffle(deck)
 
 
 ###################Class PLAYER########################################
@@ -108,7 +110,7 @@ class Player():
   def __init__(self, name = "Player") -> None:
 
     self.name = name
-    self.cards = r.choices(deck, k=7)
+    self.cards = choices(deck, k=7)
 
   # 
   def display_player_cards(self): 
@@ -118,7 +120,7 @@ class Player():
   def draw_cards(self, number_of_draws) -> None:
 
     #select random cards from deck and add to player's cards
-    cards = r.choices(deck, k=number_of_draws)
+    cards = choices(deck, k=number_of_draws)
     for card in cards: self.cards.append(card)
 
 
@@ -130,7 +132,7 @@ class Player():
   def player_has_special_card(self) -> bool:
 
     for card in self.cards:
-      symbol = card["symbol"]
+      symbol = card.get("symbol")
       if type(symbol) == str: return True
     return False
 
@@ -170,11 +172,11 @@ class Player():
       print("You chose: ", player_card)
 
       #if card played is special, leave this fn & call the played_a_special_card() 
-      if type(player_card["symbol"]) == type(''):
+      if type(player_card.get("symbol")) == type(''):
         self.cards.remove(player_card)
         self.played_a_special_card()
 
-      elif bottom_card["symbol"] == player_card["symbol"] or bottom_card["color"] == player_card["color"] or bottom_card["color"] == 'any':
+      elif bottom_card.get("symbol") == player_card.get("symbol") or bottom_card.get("color") == player_card.get("color") or bottom_card.get("color") == 'any':
         self.cards.remove(player_card)
         print("Correct!")
 
@@ -201,13 +203,13 @@ class Player():
 #     pass
 
 
-####################################end of class#######################
+####################################end of class#####################
 
 ####################################
 
 start_game()
-
-bottom_card = choose_random_bottom_card() # fix,  not accessible in fn??
+# FIXXXXXX ????? **** %%%%% #### @@@@@@@
+bottom_card = choose_random_bottom_card() #fix, not accessible inside fn??
 #bottom_card = {'symbol': "wild", 'color': 'green'}  #choose_random_bottom_card() # fix,  not accessible in fn??
 
 ###################################
