@@ -4,7 +4,7 @@ from random import choice, choices, shuffle
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = []
 bottom_card: dict[str | int] = any
-player_names: list[str] = ['Frank', 'Benjamin', 'Ducks']
+player_names: list[str] = ['Frank', 'Tebzie', "zaden"]
 game_players: dict = {}
 current_player: int = 0
 
@@ -169,6 +169,11 @@ def create_deck_cards(start: int, end: int = 10) -> None:
 
   for color in colors:
     #
+
+
+
+
+
     for number in range(start, end):
       card = {
         "symbol": number,
@@ -229,7 +234,9 @@ def skip_card_played() -> None:
   #increment by 2 once
   #if reverse has been played decrement by 2
   #the index of current player
-  pass
+  global current_player
+  
+  current_player += 1
 
 #
 def draw_2_card_played() -> None:
@@ -276,10 +283,10 @@ def call_player() -> None:
 
   global current_player
 
+  if current_player == len(player_names):  current_player = 0
   if current_player < len(player_names):
     (game_players.get(player_names[current_player])).play_a_card()
     current_player += 1
-  if current_player == len(player_names):  current_player = 0
 
   call_player()
 
