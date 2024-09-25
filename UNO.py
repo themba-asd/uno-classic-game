@@ -222,16 +222,13 @@ def check_bottom_card_is_special() -> tuple[bool, str | None]:
   else: return True, symbol
 
 #
-def reverse_card_played() -> None:
+def reverse_card_played() -> list[str]:
   
   global current_player
-  
   player_names_reversed = []
-  
   index = current_player - 1
   
   for _ in range(len(player_names)):
-      
     player_names_reversed.append(player_names[index])
     index -= 1
 
@@ -258,15 +255,28 @@ def skip_card_played() -> None:
 
 #
 def draw_2_card_played() -> None:
-  #set the bottom card symbol and color = color
-  #return color
+  
+  global current_player
+  
+  target_player_index = current_player + 1
+  
+  target_player = (game_players.get(player_names[target_player_index]))
+  target_player.draw_cards(2)
+  
+  print(f"2 Shots Fired!!: {target_player.name} Take +2")
   pass
 
 #
 def wild_draw_card_played() -> None:
-  #set the bottom card symbol and color = color
-  #return color
-  pass
+  global current_player
+  
+  target_player_index = current_player + 1
+  
+  target_player = (game_players.get(player_names[target_player_index]))
+  
+  target_player.draw_cards(4)
+  
+  print(f"4 Shots Fired!!: {target_player.name} Take + 4")
 
 #
 def call_next_player() -> None:
