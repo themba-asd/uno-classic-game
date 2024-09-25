@@ -4,7 +4,7 @@ from random import choice, choices, shuffle
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = []
 bottom_card: dict[str | int] = any
-player_names: list[str] = ['Frank', 'Tebzie', "zaden"]
+player_names: list[str] = ['Frank', "zaden"]
 game_players: dict = {}
 current_player: int = 0
 
@@ -133,7 +133,8 @@ class Player():
             #call next player
 
         case 'reverse':
-            reverse_card_played()
+            #reverse_card_played()
+            handle_reverse_fn()
             print("\nDirection Reversed, Hade Mfethu")
             #call next player
 
@@ -169,11 +170,6 @@ def create_deck_cards(start: int, end: int = 10) -> None:
 
   for color in colors:
     #
-
-
-
-
-
     for number in range(start, end):
       card = {
         "symbol": number,
@@ -227,7 +223,29 @@ def check_bottom_card_is_special() -> tuple[bool, str | None]:
 
 #
 def reverse_card_played() -> None:
-  pass
+  
+  global current_player
+  
+  player_names_reversed = []
+  
+  index = current_player - 1
+  
+  for _ in range(len(player_names)):
+      
+    player_names_reversed.append(player_names[index])
+    index -= 1
+
+  return player_names_reversed
+
+#
+def handle_reverse_fn() -> None:
+  
+  global current_player
+  
+  x = reverse_card_played()
+  player_names.clear()
+  player_names.extend(x)
+  current_player = 0
 
 #
 def skip_card_played() -> None:
