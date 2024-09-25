@@ -4,7 +4,7 @@ from random import choice, choices, shuffle
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = []
 bottom_card: dict[str | int] = any
-player_names: list[str] = ['Frank', "zaden"]
+player_names: list[str] = ['Frank', "Lee"]
 game_players: dict = {}
 current_player: int = 0
 
@@ -17,7 +17,7 @@ class Player():
   def __init__(self, name = "Player") -> None:
 
     self.name = name
-    self.cards = choices(deck, k=7)
+    self.cards = choices(deck, k=4)
     print("\nPlayer Name: ", self.name)
 
 
@@ -263,6 +263,9 @@ def draw_2_card_played() -> None:
   target_player = (game_players.get(player_names[target_player_index]))
   target_player.draw_cards(2)
   
+  #skip the player after
+  skip_card_played()
+  
   print(f"2 Shots Fired!!: {target_player.name} Take +2")
   pass
 
@@ -274,7 +277,10 @@ def wild_draw_card_played() -> None:
   
   target_player = (game_players.get(player_names[target_player_index]))
   
-  target_player.draw_cards(4)
+  target_player.draw_cards()
+  
+  #skip the player after
+  skip_card_played()
   
   print(f"4 Shots Fired!!: {target_player.name} Take + 4")
 
