@@ -4,9 +4,11 @@ from random import choice, choices, shuffle
 colors = ["red", "yellow", "blue", "green"]
 deck: list[dict] = []
 bottom_card: dict[str | int] = any
-player_names: list[str] = ['Frank', "Lee"]
+player_names: list[str] = ['Frank', "Benjamin"]
 game_players: dict = {}
 current_player: int = 0
+target_player_index = 0
+target_current_player = (game_players.get(player_names[target_player_index]))
 
 
 ###################player class
@@ -17,13 +19,13 @@ class Player():
   def __init__(self, name = "Player") -> None:
 
     self.name = name
-    self.cards = choices(deck, k=4)
-    print("\nPlayer Name: ", self.name)
+    self.cards = choices(deck, k=1)
+    #print("\nPlayer Name: ", self.name)
 
 
   def check_if_winner(self) -> None:
     if len(self.cards) < 1:
-      exit(f"\nWE HAVE A WINNER: {self.name}")
+      exit(f"\n -------- WE HAVE A WINNER-----: {self.name} -- WON!!!--------")
 
   # 
   def display_player_cards(self) -> None: 
@@ -45,7 +47,7 @@ class Player():
     cards = choices(deck, k=number_of_draws)
     for card in cards: self.cards.append(card)
 
-
+  #Not Used
   #check if player has special card
   def player_has_special_card(self) -> bool:
 
@@ -73,14 +75,14 @@ class Player():
   #
   def play_a_card(self) -> None:
 
-    print(f"\n{self.name} is now playing.")
+    print(f"\n -----------------------------\n{self.name} is now playing.")
 
     counter, user_choice = self.handle_player_options()
 
     #last list option will always be to draw cards
     if user_choice == counter:
       self.draw_cards(1)
-      print("\nYou chose to draw a card.")
+      print(f"\n Player Chose To Draw A Card.")
     else:
       player_card = self.cards[user_choice - 1]
 
@@ -95,8 +97,6 @@ class Player():
         else:
           change_bottom_card(player_card)
           self.cards.remove(player_card)
-
-          print("\nWell Played, Next Player Please")
 
       else:
         self.draw_cards(2)
@@ -129,7 +129,7 @@ class Player():
         case 'skip':
             skip_card_played()
             change_bottom_card(card)
-            print("\nSkipped Next Player, Askies")
+            print(f"\nSkipped Player {(game_players.get(player_names[current_player + 1])).name}")
             #call next player
 
         case 'reverse':
@@ -139,16 +139,16 @@ class Player():
             #call next player
 
         case "draw 2":
-            draw_2_card_played()
+            draw_card_played(2)
             change_bottom_card(card)
-            print("\nTake +2 Baba")
+            #print("\nTake +2 Baba")
             #call next player
 
         # default pattern
         case "wild draw 4":
-            wild_draw_card_played()
+            draw_card_played(4)
             change_bottom_card(card)
-            print("\nTake +4 or Fight Back?, Any Color!")
+            #print("\nTake +4 or Fight Back?, Any Color!")
             #call next player
             
     change_bottom_card(card)
@@ -156,11 +156,59 @@ class Player():
 
 ######################computer classs
 
-# class Computer(Player):
+class Computer(Player):
 
-#   #if bottom card is a special card, and user has no special card
-#   def check_for_next_move():
-#     pass
+ def handle_player_options(self) -> tuple:
+
+    counter = len(self.cards) + 1
+
+    self.display_player_cards()
+
+    user_choice = 1
+
+    for card in self.cards:
+      if card.get("symbol") == bottom_card.get("symbol") or card.get("color") == bottom_card.get("color") or "wild" in str(card.get("symbol")) or "wild" in str(bottom_card.get("symbol")):
+        return counter, user_choice
+      user_choice += 1
+    else:
+      user_choice = counter
+      return counter, user_choice
+
+  #
+def play_a_card(self) -> None:
+
+  print(f"\n{self.name} is now playing.")
+
+  counter, user_choice = self.handle_player_options()
+
+  #last list option will always be to draw cards
+  if user_choice == counter:
+    self.draw_cards(1)
+    print(f"\n{self.name} chose to draw a card.")
+  else:
+    player_card = self.cards[user_choice - 1]
+
+    print("Card Played: ", player_card)
+
+    #validate card played
+    if bottom_card.get("symbol") == player_card.get("symbol") or bottom_card.get("color") == player_card.get("color") or bottom_card.get("color") == 'any' or player_card.get("color") == 'any':
+    #if card played is special, leave this fn & call the played_a_special_card() 
+      if type(player_card.get("symbol")) == type(''):
+        self.played_a_special_card(player_card)
+        self.cards.remove(player_card)
+      else:
+        change_bottom_card(player_card)
+        self.cards.remove(player_card)
+
+        print("\nWell Played, Next Player Please")
+
+    else:
+      self.draw_cards(2)
+    
+      print("\nTake +2 for your careless mistake! Nxa!")
+    
+  self.check_if_winner()
+    #self.display_player_cards()
 
 ####################################end of class
 
@@ -254,40 +302,53 @@ def skip_card_played() -> None:
   current_player += 1
 
 #
-def draw_2_card_played() -> None:
+def draw_card_played(number: int) -> None:
   
   global current_player
   
+  #target_player_index = current_player
   target_player_index = current_player + 1
   
   target_player = (game_players.get(player_names[target_player_index]))
-  target_player.draw_cards(2)
+
+  target_player.draw_cards(number)
   
   #skip the player after
   skip_card_played()
   
-  print(f"2 Shots Fired!!: {target_player.name} Take +2")
-  pass
+  print(f"{number} Shots Fired!!: {target_player.name} Take + {number}")
 
-#
-def wild_draw_card_played() -> None:
-  global current_player
+# #
+# def draw_2_card_played() -> None:
   
-  target_player_index = current_player + 1
+#   global current_player
   
-  target_player = (game_players.get(player_names[target_player_index]))
+#   target_player_index = current_player + 1
   
-  target_player.draw_cards()
+#   target_player = (game_players.get(player_names[target_player_index]))
+#   target_player.draw_cards(2)
   
-  #skip the player after
-  skip_card_played()
+#   #skip the player after
+#   skip_card_played()
   
-  print(f"4 Shots Fired!!: {target_player.name} Take + 4")
+#   print(f"2 Shots Fired!!: {target_player.name} Take +2")
+#   pass
 
-#
-def call_next_player() -> None:
-  pass 
-
+# #
+# def wild_draw_card_played() -> None:
+#   global current_player
+  
+#   target_player_index = current_player
+#   #target_player_index = current_player + 1
+  
+#   target_player = (game_players.get(player_names[target_player_index]))
+  
+#   target_player.draw_cards(4)
+  
+#   #skip the player after
+#   skip_card_played()
+  
+#   print(f"4 Shots Fired!!: {target_player.name} Take + 4")
 
 #create and shuffle deck
 def start_game():
@@ -310,6 +371,13 @@ def create_players(player_names: list) -> dict:
 
   for name in player_names:
       game_players[name] = Player(name)
+
+  player_names.append("Computer")
+  game_players["Computer"] = Computer("Computer")
+
+  for name in player_names: 
+    print(f"Players: {name}\n", end=" ")
+
   return game_players
 
 #
@@ -317,45 +385,15 @@ def call_player() -> None:
 
   global current_player
 
-  if current_player == len(player_names):  current_player = 0
+  if current_player >= len(player_names):
+    current_player = 0
   if current_player < len(player_names):
     (game_players.get(player_names[current_player])).play_a_card()
     current_player += 1
 
   call_player()
 
-
 ################################It Starts Here
 start_game()
 create_players(player_names)
 call_player()
-
-###########################################
-###############net for control
-
-# print("bottom card: ", bottom_card)
-# print("number of cards: ", len(deck))
-# print("deck cards: ")
-# for cards in deck: print(cards)
-#print("bottom special card: ", check_bottom_card_is_special())
-
-
-#player1 = Player("Frank Franklin")
-
-#player2 = Player("tshego")
-#print("player cards: ", player2.name)
-#for card in player.cards: print(card)
-#print("player has special: ", player.player_has_special_card())
-
-
-#print("bottom card: ", bottom_card)
-# print("number of cards: ", len(deck))
-# print("deck cards: ")
-# for cards in deck: print(cards)
-#print("bottom special card: ", check_bottom_card_is_special())
-
-#player.play_a_card()
-
-#print("Tshego's turn")
-#player2.play_a_card()
-
