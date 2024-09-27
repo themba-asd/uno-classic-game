@@ -16,7 +16,7 @@ class Player():
 
   def __init__(self, name = "Player") -> None:
     self.name = name
-    self.cards = choices(deck, k=1)
+    self.cards = choices(deck, k=7)
 
 
   def check_if_winner(self) -> None:
